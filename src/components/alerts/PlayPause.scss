@@ -1,0 +1,36 @@
+@import '../../variables.scss';
+
+.grauman-media-player {
+    .icon-container {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 52px;
+        height: 52px;
+        z-index: 100;
+        margin-top: -26px;
+        margin-left: -26px;
+        margin-right: -26px;
+        background: rgba(0,0,0,.5);
+        border-radius: 30px;
+        pointer-events: none;
+    }
+
+    .icon-container i {
+        color: $textColor;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%,-50%);
+
+        &.icon-play {
+            transform: translate(-35%, -50%);
+        }
+    }
+
+    .icon-container.animate {
+        opacity: 0;
+        transition: all 0.5s linear;
+        transform: scale(2);
+    }
+}

@@ -1,0 +1,50 @@
+@import '../../variables.scss';
+
+.grauman-media-player {
+    .media-container .audio-image-sizer {
+        width: 100%;
+        background-color: $controlsBackgroundColor;
+        padding-bottom: 50%;
+    }
+
+    .viewer .audio-image {
+        background-position: center center;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+        background-color: #fff;
+        position: absolute;
+        top: 0px;
+        bottom: 32px;
+        right: 0px;
+        left: 0px;
+        overflow: hidden;
+    }
+
+    .audio-playhead {
+        height: 100%;
+        background-color: rgba(34, 192, 255, 0.25);
+        border-right: 2px solid rgba(34, 192, 255, 0.75);
+        position: absolute;
+    }
+
+    .audio-scrubber {
+        height: 100%;
+        bottom: 0;
+        border-right: 2px $controlsBackgroundColor solid;
+        position: absolute;
+
+        .hover-time {
+            position: absolute;
+            right: 0;
+            background-color: $controlsBackgroundColor;
+            color: $textColor;
+            transition-property: transform;
+            transition-duration: 0.3s;
+            padding: 3px 6px;
+
+            &.right {
+                transform: translateX(100%);
+            }
+        }
+    }
+}

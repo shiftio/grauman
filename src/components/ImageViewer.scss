@@ -1,0 +1,81 @@
+@import '../variables.scss';
+
+.grauman-image-viewer,
+.grauman-image-viewer .image-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.grauman-image-viewer {
+    .is-draggable.fill {
+        cursor: move;
+    }
+
+    .is-loading .image {
+        transition-duration: 0s;
+        opacity: 0;
+    }
+
+    .image {
+        transition-property: opacity;
+        transition-duration: 0.25s;
+        opacity: 1;
+        height: 100%;
+        width: 100%;
+        background-repeat: no-repeat;
+    }
+
+    .controls-hidden {
+        .controls-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+    }
+
+    .controls-container {
+        opacity: 1;
+        transition-property: opacity;
+        transition-duration: 0.25s;
+        position: absolute;
+        bottom: 5px;
+        text-align: center;
+        width: 100%;
+
+        &.fill .button.fill,
+        &.fit .button.fit {
+            cursor: default;
+            background-color: $controlsHoverColor;
+        }
+
+        .button {
+            position: relative;
+            width: 35px;
+            height: 35px;
+            color: $textColor;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            background-color: $controlsBackgroundColor;
+
+            &:first-child {
+                border-top-left-radius: 5px;
+                border-bottom-left-radius: 5px;
+            }
+
+            &:last-child {
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+            }
+            
+            &:hover {
+                background-color: $controlsHoverColor;
+            }
+
+            i {
+                font-size: 16px;
+            }
+        }
+    }
+}

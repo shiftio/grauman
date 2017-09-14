@@ -1,0 +1,133 @@
+@font-face {
+  	font-family: 'gicomoon';
+  	src:  url('./gicomoon.eot?cntdt3');
+  	src:  url('./gicomoon.eot?cntdt3#iefix') format('embedded-opentype'),
+		url('./gicomoon.ttf?cntdt3') format('truetype'),
+		url('./gicomoon.woff?cntdt3') format('woff'),
+		url('./gicomoon.svg?cntdt3#icomoon') format('svg');
+  	font-weight: normal;
+ 	font-style: normal;
+}
+
+@-webkit-keyframes grauman-icon-spin {
+	0% {
+		-webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+    
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg)
+    }
+}
+
+@keyframes grauman-icon-spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg)
+    }
+    
+    100% {
+        -webkit-transform: rotate(359deg);
+        transform: rotate(359deg)
+    }
+}
+
+.grauman-media-player,
+.grauman-document-viewer,
+.grauman-image-viewer {
+    [class^="icon-"], [class*=" icon-"] {
+        /* use !important to prevent issues with browser extensions that change fonts */
+        font-family: 'gicomoon' !important;
+        speak: none;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        display: inline-block;
+        font-size: 14px;
+        line-height: 1;
+
+        /* Better Font Rendering =========== */
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .icon-spin {
+        -webkit-animation: grauman-icon-spin 2s infinite linear;
+        animation: grauman-icon-spin 2s infinite linear;
+    }
+
+    .icon-vertical-mirror {
+        transform: scaleX(-1);
+        -webkit-transform: scaleX(-1);
+    }
+
+    .icon-close:before {
+        content: "\f00d";
+    }
+
+    .icon-gear:before {
+        content: "\f013";
+    }
+
+    .icon-repeat:before {
+        content: "\f01e";
+    }
+
+    .icon-volume-off:before {
+        content: "\f026";
+    }
+
+    .icon-volume-down:before {
+        content: "\f027";
+    }
+
+    .icon-volume-up:before {
+        content: "\f028";
+    }
+
+    .icon-play:before {
+        content: "\f04b";
+    }
+
+    .icon-pause:before {
+        content: "\f04c";
+    }
+
+    .icon-expand:before {
+        content: "\f065";
+    }
+
+    .icon-compress:before {
+        content: "\f066";
+    }
+
+    .icon-spinner:before {
+        content: "\f110";
+    }
+
+    .icon-zoom-in-16:before {
+        content: "\e987";
+    }
+
+    .icon-zoom-out-16:before {
+        content: "\e988";
+    }
+
+    .icon-enlarge-16:before {
+        content: "\e989";
+    }
+
+    .icon-shrink-16:before {
+        content: "\e98a";
+    }
+
+    .icon-expand-16:before {
+        content: "\e98b";
+    }
+
+    .icon-compress-16:before {
+        content: "\e98c";
+    }
+}

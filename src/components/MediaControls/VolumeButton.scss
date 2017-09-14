@@ -1,0 +1,48 @@
+@import '../../variables.scss';
+
+.control.sound {
+    position: relative;
+
+	.volume-icon {
+		position: relative;
+		top: 1px;
+
+		.icon-close {
+			font-size: 10px;
+			position: relative;
+			top: -2px;
+			color: red;
+		}
+	}
+
+	.slider-container {
+		background-color: $controlsBackgroundColor;
+		height: 100px;
+		position: absolute;
+		top: -100px;
+        left: 0px;
+		width: 30px;
+
+		.slider-hitbox {
+			margin-top: 16px;
+			cursor: pointer;
+		}
+
+		.slider-background {
+			background-color: $controlsHoverColor;
+			width: 3px;
+			height: 73px;
+			margin-left: 13px;
+		}
+
+		.slider {
+			background-color: $textColor;
+			width: 16px;
+			height: 16px;
+			border-radius: 8px;
+			position: absolute;
+			top: 79px;
+			right: 8px;
+		}
+	}
+}

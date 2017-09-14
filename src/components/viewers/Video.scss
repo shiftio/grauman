@@ -1,0 +1,9 @@
+.grauman-media-player {
+    .viewer > * {
+        background-color: black;
+    }
+
+    .viewer > canvas {
+        cursor: grab;
+    }
+}

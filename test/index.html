@@ -1,0 +1,119 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Grauman Test Page</title>
+
+        <link rel="icon" type="image/png" href="./favicon-32x32.png" sizes="32x32">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./test.css">
+        <link rel="stylesheet" href="../dist/grauman.css">
+    </head>
+    <body>
+        <div class="container container-header">
+            <h2>Grauman File Viewer</h2>
+            <p>
+                This page tests the Grauman class, which is a helper class that handles setup and teardown of the proper component necessary to display the given MediaFile. Since this is currently just a convenience class, if you want to access the actual APIs of the various underlying viewers, you access them via the `viewer` property on the Grauman instance.
+            </p>
+        </div>
+
+        <div class="container actions">
+            <a id="reset" class="btn btn-default" href="#reset">Reset Container Size</a>
+            <a id="random" class="btn btn-default" href="#random">Random Container Size</a>
+            <a id="destroy" class="btn btn-danger" href="#destroy">Destroy Player</a>
+        </div>
+
+        <div id="grauman" class="container full container-viewer"></div>
+        <div class="container container-links"></div>
+        <!--
+        <div class="container" style="text-align: center;">
+            <p class="lead">
+                <h3>
+                    <small>To test the underlying viewer components in isolation, and for the documentation, click the links below:</small>
+                </h3>
+            </p>
+            <p>
+                <a class="btn btn-default" href="../dist/docs/index.html">Documentation</a>
+                <a class="btn btn-default" href="./video.html">MediaPlayer</a>
+                <a class="btn btn-default" href="./image.html">ImageViewer</a>
+                <a class="btn btn-default" href="./document.html">DocumentViewer</a>
+            </p>
+        </div>
+        -->
+        <script src="../dist/grauman.js"></script>
+        <script src="./test-helpers.js"></script>
+        <script>
+            (function () {
+                'use strict';
+
+                Grauman.publicPath = '../dist/';
+
+                function render(files) {
+                    let container = document.getElementById('grauman'),
+                        grauman;
+
+                    function createPlayer(container, file) {
+                        grauman = new Grauman(container, {
+                            autoplay: true
+                        });
+
+                        if (file) {
+                            grauman.file = file;
+                        }
+
+                        window.grauman = grauman;
+                    }
+
+                    function destroyPlayer() {
+                        if (grauman) {
+                            grauman.destroy();
+                        }
+
+                        window.grauman = grauman = null;
+                    }
+
+                    function changeFile(file) {
+                        if (!grauman) {
+                            createPlayer(container)
+                        } 
+
+                        grauman.file = file;
+                    }
+
+                    function random(min, max) {
+                        return Math.floor(Math.random() * (max - min + 1)) + min;
+                    }
+
+                    createPlayer(container, files[0]);
+                    graumanTest.drawLinks(files, changeFile);
+
+                    // Buttons
+                    document.getElementById('reset').onclick = function (e) {
+                        e.preventDefault();
+
+                        container.style.width = null; 
+                        container.style.height = null;
+                    }
+
+                    document.getElementById('random').onclick = function (e) {
+                        e.preventDefault();
+
+                        container.style.width = random(360, 1400) + 'px';
+                        container.style.height = random(200, 900) + 'px';
+                    }
+
+                    document.getElementById('destroy').onclick = function (e) {
+                        e.preventDefault();
+
+                        destroyPlayer();
+                    };
+                }
+
+                graumanTest.getData('./data/data.json', render);
+            }());
+        </script>
+    </body>
+</html>

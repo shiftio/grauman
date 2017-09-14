@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link href="https://fonts.googleapis.com/css?family=Permanent+Marker" rel="stylesheet">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="../dist/grauman.css">
+        <style>
+.btn-default:focus,
+.btn-default:active,
+.btn-default:focus:active {
+    outline: none;
+}
+
+.spacer {
+    display: inline-block;
+    width: 20px;
+}
+
+.container {
+    text-align: center;
+}
+
+.form-inline input.form-control {
+	width: 50%;
+}
+
+#grauman {
+    margin-top: 35px;
+    margin-bottom: 35px;
+	min-height: 500px;
+}
+
+textarea.form-control {
+    height: 300px;
+}
+
+h2 {
+    font-family: 'Permanent Marker', cursive;
+}
+        </style>
+    </head>
+    <body>
+        <div class="jumbotron">
+            <div class="container">
+                <h2>Grauman HLS Test Page</h2>
+
+				<form class="form-inline">
+					<input type="text" name="url" class="form-control" placeholder="M3U8 URL" value="https://s3-us-west-2.amazonaws.com/grauman-test-files/video.m3u8">
+					<button type="submit" class="btn btn-default">Load</button>
+				</form>
+            </div>
+        </div>
+
+        <div class="container test-buttons">
+            <h5>In-page buttons that control MediaPlayer through its API</h5>
+
+            <button class="btn btn-default"
+                    data-balloon="Seek back 5 seconds"
+                    onclick="javascript:mediaPlayer.seek(-5);">
+                <i class="fa fa-backward"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Stop"
+                    onclick="javascript:mediaPlayer.stop();">
+                <i class="fa fa-stop"></I>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Play"
+                    onclick="javascript:mediaPlayer.play();">
+                <i class="fa fa-play"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Pause"
+                    onclick="javascript:mediaPlayer.pause();">
+                <i class="fa fa-pause"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Seek forward 5 seconds"
+                    onclick="javascript:mediaPlayer.seek(5);">
+                <i class="fa fa-forward"></i>
+            </button>
+
+            <span class="spacer"></span>
+
+            <button class="btn btn-default"
+                    data-balloon="Seek to half duration"
+                    onclick="javascript:mediaPlayer.seekTo(mediaPlayer.file.duration / 2);">
+                <i class="fa fa-hourglass-half"></i>
+            </button>
+
+            <span class="spacer"></span>
+
+            <button class="btn btn-default"
+                    data-balloon="Mute"
+                    onclick="javascript:mediaPlayer.muted = !mediaPlayer.muted;">
+                <i class="fa fa-volume-off"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Decrease volume"
+                    onclick="javascript:mediaPlayer.volume -= 0.1;">
+                <i class="fa fa-volume-down"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Increase volume"
+                    onclick="javascript:mediaPlayer.volume += 0.1;">
+                <i class="fa fa-volume-up"></i>
+            </button>
+
+            <span class="spacer"></span>
+
+            <button class="btn btn-default"
+                    data-balloon="Fullscreen"
+                    onclick="javascript:mediaPlayer.fullscreen = !mediaPlayer.fullscreen;">
+                <i class="fa fa-expand"></i>
+            </button>
+
+            <span class="spacer"></span>
+
+            <button class="btn btn-default"
+                    data-balloon="Decrease playback speed"
+                    onclick="javascript:mediaPlayer.decreaseSpeed();">
+                <i class="fa fa-angle-double-left"></i>
+            </button>
+            <button class="btn btn-default"
+                    data-balloon="Increase playback speed"
+                    onclick="javascript:mediaPlayer.increaseSpeed();">
+                <i class="fa fa-angle-double-right"></i>
+            </button>
+        </div>
+
+        <div class="container" id="grauman"></div>
+        <div class="container">
+            <h4>Event Log</h4>
+            <h5>View the browser console to see the complete event firehose</h5>
+            <textarea class="form-control" id="log"></textarea>
+        </div>
+
+        <script src="../dist/grauman.js"></script>
+        <script>
+(function () {
+    'use strict';
+
+	// tell Grauman where its other assets are located
+    Grauman.publicPath = '../dist/';
+
+	// Instantiate a MediaPlayer instance
+    var mediaPlayer = new Grauman.MediaPlayer(document.getElementById('grauman'), {
+            upscale: Grauman.UPSCALE_MODES.ALWAYS,
+			autoplay: true
+        });
+
+
+
+    // make the instance globally accessible
+    window.mediaPlayer = mediaPlayer;
+
+
+
+	// bind a console logger to all events fired by the MediaPlayer instance.
+    Object.values(Grauman.MediaPlayer.EVENTS).forEach(function (eventName) {
+        mediaPlayer.on(eventName, function (e) { console.log(eventName, e); });
+    });
+
+    
+
+    // cherry-pick some events to log to the textarea
+    function log() {
+        var textarea = document.getElementById('log');
+
+        textarea.innerHTML += Array.from(arguments).join(' ') + '\n';
+        textarea.scrollTop = textarea.scrollHeight;
+    }
+
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.LOAD_START, function (e) { log('Starting file load:', mediaPlayer.file.url); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.HLS_MANIFEST_LOADING, function (e) { log('HLS Manifest Loading event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.HLS_LEVEL_SWITCHED, function (e) { log('Quality Level Change:', e.data.level); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.ERROR, function (e) { log('Error event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.PROGRESS, function (e) { log('Load progress event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.STALLED, function (e) { log('Stalled event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.SEEKED, function (e) { log('Seeked event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.SUSPEND, function (e) { log('Suspend event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.WAITING, function (e) { log('Waiting event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.PAUSE, function (e) { log('Pause event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.PLAYING, function (e) { log('Playing event'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.VOLUME_CHANGE, function (e) { log('Volume changed'); });
+    mediaPlayer.on(Grauman.MediaPlayer.EVENTS.RATE_CHANGE, function (e) { log('Playback speed changed'); });
+
+	// Make the MediaPlayer try and play the M3U8 file at the given url.
+	// This file config is forcing the file to play at 720p, regardless of its actual resolution
+    function loadUrl(url) {
+        mediaPlayer.file = new Grauman.MediaFile({
+            url: url,
+            extension: 'm3u8',
+            mimeType: 'application/x-mpegURL',
+			height: 720,
+			width: 1280
+        });
+    }
+
+	// bind the ui to change the file
+    var input = document.querySelector('input'),
+        button = document.querySelector('button');
+
+    document.querySelector('form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        loadUrl(input.value);
+    });
+
+    // load the default video url
+    loadUrl(input.value);
+}());
+        </script>
+    </body>
+</html>

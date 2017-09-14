@@ -1,0 +1,33 @@
+@import '../../variables.scss';
+
+.grauman-container .spinner {
+    text-align: center;
+
+    & > div {
+      background-color: $textColor;
+      margin: 0 2px;
+      width: 8px;
+      height: 8px;
+      opacity: 0.60;
+      border-radius: 100%;
+      display: inline-block;
+      animation: sk-bouncedelay 1.2s infinite ease-in-out both;
+    }
+
+    .bounce-1 {
+        animation-delay: -0.3s;
+    }
+
+    .bounce-2 {
+        animation-delay: -0.15s;
+    }
+
+}
+
+@keyframes sk-bouncedelay {
+    0%, 80%, 100% {
+        transform: scale(0);
+    } 40% {
+        transform: scale(1.0);
+    }
+}

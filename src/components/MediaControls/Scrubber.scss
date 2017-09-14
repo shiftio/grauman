@@ -1,0 +1,62 @@
+@import '../../variables.scss';
+
+.scrubber-container {
+	flex-basis: fit-content;
+	position: relative;
+	height: 32px;
+	width: 100%;
+	background-color: $controlsBackgroundColor;
+
+    [data-grauman-tooltip]:after,
+    [data-grauman-tooltip]:before {
+        bottom: 17px;
+        transition: none;
+        -webkit-transition: none;
+    }
+
+    .hover-line {
+        width: 1px;
+        height: 32px;
+        background-color: red;
+        pointer-events: none;
+        position: relative;
+    }
+
+	&.seeking-locked {
+		.scrubber {
+			cursor: default;
+		}
+
+		.progress-loaded,
+		.progress-played {
+			cursor: pointer;
+		}
+	}
+
+	.scrubber,
+	.scrubber > div {
+		height: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+		position: absolute;
+		width: 100%;
+	}
+
+	.scrubber {
+		cursor: pointer;
+
+		.progress-background {
+			background-color: $scrubberBackgroundColor;
+		}
+
+		.progress-played {
+			background-color: $scrubberProgressColor;
+			z-index: 10;
+		}
+
+		.progress-loaded {
+			background-color: $scrubberLoadingColor;
+			z-index: 1;
+		}
+	}
+}
