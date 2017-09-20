@@ -1,2 +1,10 @@
+.babelrc
+.editorconfig
+.eslintignore
+.eslintrc
+.gitignore
+.npmignore
+postcss.config.js
+webpack.config.js
 node_modules
 src
