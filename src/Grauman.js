@@ -68,11 +68,11 @@ class Grauman {
 
                 const type = this.file.mimeType.split('/')[0];
 
-                if (type in { audio: 1, video: 1 } || this.file.extension === 'm3u8') {
+                if (type in { audio: 1, video: 1 } || this.file.isHLS) {
                     return MediaPlayer;
                 } else if (type === 'image') {
                     return ImageViewer;
-                } else if (this.file.extension === 'pdf') {
+                } else if (this.file.isPDF) {
                     return DocumentViewer;
                 }
 

@@ -96,7 +96,7 @@ const MediaPlayerComponent = {
 
         // override the user trigger flag if on iOS. For some reason,
         // autoplay works on iOS with an m3u8 file
-        if (IS_IOS && this.file.extension === 'm3u8') {
+        if (IS_IOS && this.file.isHLS) {
             this.needsUserTrigger = false;
         }
 
