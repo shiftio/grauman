@@ -2,6 +2,9 @@ export default function makeObservable(obj) {
     // internal hash that will track all of the event handlers bound through the `on` method
     const _observers = {};
 
+    // parent object that should receive bubbled events
+    let _bubbleTarget = null;
+
     /**
      * Attach an event callback function to this instance.
      *
@@ -76,5 +79,22 @@ export default function makeObservable(obj) {
                 callback.call(this, event);
             }, this);
         }
+
+        if (_bubbleTarget && typeof _bubbleTarget._notify === 'function') {
+            _bubbleTarget._notify(eventName, event);
+        }
+    }.bind(obj);
+
+    /**
+     * Set object that will receive bubbled events
+     *
+     * @param {object} target Events receiver
+     */
+    obj.setEventBubbleTarget = function (target) {
+        if (typeof target !== 'object' || typeof target._notify !== 'function') {
+            throw new TypeError('Bubble target should be an observable object');
+        }
+
+        _bubbleTarget = target;
     }.bind(obj);
 }
