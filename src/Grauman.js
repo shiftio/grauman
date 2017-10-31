@@ -19,7 +19,7 @@ class Grauman {
             // eslint-disable-next-line new-cap
             this.viewer = new this.type(this.container, { ...this.settings, file: this.file });
 
-            this.viewer.setEventBubbleTarget(this);
+            this.viewer.setEventTarget(this);
         }
 
         this.viewer.file = this.file;
