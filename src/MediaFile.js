@@ -10,6 +10,7 @@ import { STEREOSCOPIC_LAYOUTS } from 'consts';
  * @param {Object} file A hash to initialize the MediaFile with.
  * @param {string} file.mimeType MIME Type of the file.
  * @param {string} file.url URL of the file to display.
+ * @param {string} [file.extension=null] Extension of the file.
  * @param {number} [file.duration] Total playback length, in seconds.
  * @param {string} [file.poster=null] URL to an image to use as a poster image.
  * @param {boolean} [file.is360=false] Is the file content formatted for a 360/panoramic viewer?
@@ -36,6 +37,16 @@ function MediaFile(file) {
     if (!file.url || typeof file.url !== 'string') {
         throw new TypeError('MediaFile `url` required');
     }
+
+    /**
+     * The extension of the file.
+     *
+     * @property {string}
+     * @example
+     * "mp4"
+     * "m4a"
+     */
+    this.extension = file.extension;
 
     /**
      * Is the file intended to be displayed in a 360 or panoramic viewer?

@@ -1,6 +1,7 @@
 {
     "HLS": [{
         "title": "HLS - Encrypted M3U8",
+        "extension": "m3u8",
         "mimeType": "application/x-mpegURL",
         "duration": 11.678354,
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/video.m3u8",
@@ -10,6 +11,7 @@
 
     "360": [{
         "title": "Video - 360, 4K",
+        "extension": "mp4",
         "mimeType": "video/mp4",
         "is360": true,
         "fps": 29.97,
@@ -22,6 +24,7 @@
 
     "audio": [{
         "title": "Audio - 8 Channel Test",
+        "extension": "m4a",
         "mimeType": "audio/m4a",
         "duration": 8.070979,
         "channels": 2,
@@ -29,6 +32,7 @@
         "waveform": "https://s3-us-west-2.amazonaws.com/grauman-test-files/8channel_waveform.jpg"
     }, {
         "title": "Audio - Dialup (mono)",
+        "extension": "m4a",
         "mimeType": "audio/m4a",
         "duration": 27.606646,
         "channels": 1,
@@ -36,6 +40,7 @@
         "waveform": "https://s3-us-west-2.amazonaws.com/grauman-test-files/dialup_waveform.jpg"
     }, {
         "title": "Audio - Laden, Hypoxia",
+        "extension": "m4a",
         "mimeType": "audio/m4a",
         "duration": 94.062167,
         "channels": 2,
@@ -43,6 +48,7 @@
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/laden_hypoxia.m4a"
     }, {
         "title": "Audio - Laden, Hypoxia (No Waveform)",
+        "extension": "m4a",
         "mimeType": "audio/m4a",
         "duration": 94.062167,
         "channels": 2,
@@ -51,6 +57,7 @@
 
     "video": [{
         "title": "Video - 1080p Forest",
+        "extension": "mp4",
         "mimeType": "video/mp4",
         "fps": 29.97,
         "duration": 25.236667,
@@ -60,6 +67,7 @@
         "width": 1920
     }, {
         "title": "Video - Snapchat",
+        "extension": "mp4",
         "mimeType": "video/mp4",
         "fps": 30,
         "duration": 3.900000,
@@ -69,6 +77,7 @@
         "width": 1080
     }, {
         "title": "Video - 540p Water",
+        "extension": "mp4",
         "mimeType": "video/mp4",
         "fps": 29.97,
         "duration": 29.846000,
@@ -80,24 +89,28 @@
 
     "image": [{
         "title": "JPEG (Large) - Hurricane",
+        "extension": "jpg",
         "mimeType": "image/jpg",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/large.jpg",
         "height": 1890,
         "width": 2772
     }, {
         "title": "JPEG (Tall) - Night Sky",
+        "extension": "jpg",
         "mimeType": "image/jpg",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/vertical.jpg",
         "height": 600,
         "width": 1086
     }, {
         "title": "JPEG (Small) - Puppy",
+        "extension": "jpg",
         "mimeType": "image/jpg",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/small.jpg",
         "height": 344,
         "width": 600
     }, {
         "title": "GIF - Abstract",
+        "extension": "gif",
         "mimeType": "image/gif",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/abstract.gif",
         "height": 400,
@@ -106,10 +119,12 @@
 
     "document": [{
         "title": "PDF - Tracemonkey (pw: grauman)",
+        "extension": "pdf",
         "mimeType": "application/pdf",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/tracemonkey_pw.pdf"
     }, {
         "title": "PDF - Tracemonkey",
+        "extension": "pdf",
         "mimeType": "application/pdf",
         "url": "https://s3-us-west-2.amazonaws.com/grauman-test-files/tracemonkey.pdf"
     }]
