@@ -1,6 +1,11 @@
 # Change Log
 All notable changes to this project will be documented in this file.
 
+## [0.2.6]
+- [ENHANCEMENT] - MediaFile `extension` property is no longer required. All decisions based off `extension` are now based off `mimeType`
+- [ENHANCEMENT] - Add `setEventTarget` and `clearEventTarget` functions to Observables that specify targets events will bubble to.
+- [ENHANCEMENT] - `Grauman` namespace is now Observable
+
 ## [0.2.5] - Open Source Release
 - [NON-BREAKING CHANGE] - 360 viewer removed orientation controls for mobile devices and now use a touch interface similar to the desktop mouse interface
 - [ENHANCEMENT] - Polished up some of the MediaPlayer's mobile controls. touch-and-drag is now supported on the timeline Scrubber and the volume slider.
