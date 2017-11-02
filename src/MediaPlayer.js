@@ -267,7 +267,6 @@ class MediaPlayer {
                 volume: 0.5,
                 localStorageEnabled: false,
                 file: new MediaFile({
-                    extension: 'mp4',
                     mimeType: 'video/mp4',
                     url: 'http://example.com/clip.mp4'
                 })
@@ -1063,7 +1062,7 @@ class MediaPlayer {
         // eslint-disable-next-line camelcase, no-undef
         __webpack_public_path__ = MediaPlayer._publicPath;
 
-        if (file.extension === 'm3u8') {
+        if (file.isHLS) {
             if (IS_SAFARI || IS_IOS) {
                 require.ensure([], function (require) { _mount(require('components/viewers/Video')); });
             } else {
