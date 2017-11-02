@@ -2,6 +2,7 @@ import MediaPlayer from 'MediaPlayer';
 import ImageViewer from 'ImageViewer';
 import DocumentViewer from 'DocumentViewer';
 import MediaFile from 'MediaFile';
+import makeObservable from 'makeObservable';
 import { STEREOSCOPIC_LAYOUTS, IMAGEVIEWER_MODES, UPSCALE_MODES } from 'consts';
 import 'Grauman.scss';
 import 'tooltip.css';
@@ -17,6 +18,8 @@ class Grauman {
         if (!this.viewer) {
             // eslint-disable-next-line new-cap
             this.viewer = new this.type(this.container, { ...this.settings, file: this.file });
+
+            this.viewer.setEventTarget(this);
         }
 
         this.viewer.file = this.file;
@@ -79,6 +82,8 @@ class Grauman {
                 console.warn('Grauman does not have an acceptable viewer for MediaFile', this.file);
             }
         });
+
+        makeObservable(this);
 
         this.viewer = null;
         this.container = container;
