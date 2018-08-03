@@ -18,6 +18,7 @@ const MediaPlayerComponent = {
     needsUserTrigger: false,
 
     isFullscreen: false,
+    isBodyFullscreen: false,
     isMobile: IS_MOBILE,
 
     isLoading: false,
@@ -61,6 +62,7 @@ const MediaPlayerComponent = {
         this._attachResizeSensor();
         document.addEventListener(FULLSCREEN_EVENT_NAME, this._fullscreenchange);
         this.resize();
+        this._nativeEventForwarder(new Event('created'));
     },
 
     onremove(/* vnode */) {
@@ -157,6 +159,7 @@ const MediaPlayerComponent = {
             document.msFullscreenElement;
 
         this.isFullscreen = (element && vnode.dom.contains(element)) || false;
+        this.isBodyFullscreen = element || false;
         this.redraw();
     },
 
@@ -217,7 +220,7 @@ const MediaPlayerComponent = {
 
         let maxWidth, maxHeight;
 
-        if (this.isFullscreen) {
+        if (this.isFullscreen || this.isBodyFullscreen) {
             maxWidth = window.innerWidth;
             maxHeight = window.innerHeight;
         } else {
@@ -233,8 +236,7 @@ const MediaPlayerComponent = {
 
             maxHeight = this._instance.containerHeight;
         }
-
-        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && this.isFullscreen);
+        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && (this.isFullscreen || this.isBodyFullscreen));
 
         let ratio = 0,
             widthModified = false,
@@ -290,19 +292,23 @@ const MediaPlayerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        const container = vnode.dom;
+        let fullscreenToggle = new Event('fullscreenToggle');
+        this._nativeEventForwarder(fullscreenToggle);
+        if (!fullscreenToggle.cancelBubble) {
+            const container = vnode.dom;
 
-        if (this.isFullscreen) {
-            const exitFullscreen = document.exitFullscreen
-                || document.mozCancelFullScreen
-                || document.webkitExitFullscreen;
+            if (this.isFullscreen) {
+                const exitFullscreen = document.exitFullscreen
+                    || document.mozCancelFullScreen
+                    || document.webkitExitFullscreen;
 
-            exitFullscreen.apply(document);
-        } else {
-            const requestFullscreen = container.requestFullScreen
-                || container.webkitRequestFullScreen
-                || container.mozRequestFullScreen;
-            requestFullscreen.apply(container);
+                exitFullscreen.apply(document);
+            } else {
+                const requestFullscreen = container.requestFullScreen
+                    || container.webkitRequestFullScreen
+                    || container.mozRequestFullScreen;
+                requestFullscreen.apply(container);
+            }
         }
     },
 
@@ -697,7 +703,7 @@ const MediaPlayerComponent = {
                 muted: this.isMuted,
                 speed: this.playbackSpeed,
                 type: vnode.attrs.type,
-                fullscreen: this.isFullscreen,
+                fullscreen: this.isFullscreen || this.isBodyFullscreen,
                 format: this.timeFormat,
                 playing: this.isPlaying,
                 loading: this.isLoading,
