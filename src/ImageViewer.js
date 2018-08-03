@@ -133,7 +133,8 @@ export default class ImageViewer {
                     file: instance.file,
                     isFullscreenEnabled: instance.isFullscreenEnabled,
                     viewMode: instance.viewMode,
-                    onViewModeChange: instance._onViewModeChange
+                    onViewModeChange: instance._onViewModeChange,
+                    _nativeEventForwarder: function _eventForwarder(e) { instance._notify(e.type, e); }.bind(instance)
                 }));
             }
         });
