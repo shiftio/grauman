@@ -4,6 +4,7 @@ import throttle from 'lodash.throttle';
 import Polyfills from 'Polyfills';
 import TimeFormatter from 'TimeFormatter';
 import './Scrubber.scss';
+import { IS_MOBILE } from 'consts';
 
 function _matches(el, selector) {
     return (
@@ -92,6 +93,12 @@ const Scrubber = {
                 return;
             }
         }
+
+        const boundingRect = vnode.dom.getBoundingClientRect();
+        const cursorX = Math.max(0, e.touches[0].clientX - boundingRect.left);
+        const width = parseInt(vnode.dom.offsetWidth, 10);
+
+        this.cursorX = Math.min(cursorX, width);
 
         this.isDragging = true;
 

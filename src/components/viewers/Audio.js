@@ -3,6 +3,7 @@ import classnames from 'classnames';
 import TimeFormatter from 'TimeFormatter';
 import Polyfills from 'Polyfills';
 import './Audio.scss';
+import { IS_MOBILE } from 'consts';
 
 const AudioViewer = {
     isHovering: false,
@@ -67,6 +68,7 @@ const AudioViewer = {
     },
 
     _onDocumentMouseUp(vnode) {
+        IS_MOBILE && this.onupdate(vnode);
         this.isDragging = false;
         vnode.attrs.onSeek(this.hoverTime);
         Polyfills.closest(vnode.dom, '.media-container').focus();
@@ -82,7 +84,10 @@ const AudioViewer = {
 
         return m('.viewer', {
             style: { 'background-color': '#fff' },
-            onclick: () => { vnode.attrs.onSeek(this.hoverTime); },
+            onclick: () => {
+                IS_MOBILE && this.onupdate(vnode);
+                vnode.attrs.onSeek(this.hoverTime);
+            },
             onmousemove: this._onMouseMove.bind(this, vnode),
             onmouseenter: this._onMouseEnter.bind(this, vnode),
             onmousedown: this._onMouseDown.bind(this, vnode),
