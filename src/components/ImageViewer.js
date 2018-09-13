@@ -225,7 +225,7 @@ const ImageViewerComponent = {
 
         const position = this.position;
         const styles = {
-            'background-image': `url(${this.image.src})`
+            'background-image': `url("${this.image.src.replace(/(")/g, "\\$1")}")`
         };
 
         let positionX = 'center',
