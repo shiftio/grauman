@@ -20,6 +20,7 @@ const ImageViewerComponent = {
     isHidingControls: false,
     isLockingControls: false,
     isFullscreen: false,
+    isBodyFullscreen: false,
 
     position: [0, 0],
     lastMousePosition: [0, 0],
@@ -48,6 +49,7 @@ const ImageViewerComponent = {
             document.msFullscreenElement;
 
         this.isFullscreen = (element && vnode.dom.contains(element)) || false;
+        this.isBodyFullscreen = element || false;
         this.redraw();
     },
 
@@ -151,6 +153,8 @@ const ImageViewerComponent = {
     },
 
     oninit: function (vnode) {
+        this._nativeEventForwarder = typeof vnode.attrs._nativeEventForwarder === 'function' ?
+            vnode.attrs._nativeEventForwarder : false;
         this.onDocumentMouseMove = this.onDocumentMouseMove.bind(this, vnode);
         this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this, vnode);
         this.onElementResize = this.onElementResize.bind(this, vnode);
@@ -199,6 +203,7 @@ const ImageViewerComponent = {
 
         this.loadImage(vnode.attrs.file);
         document.addEventListener(FULLSCREEN_EVENT_NAME, this.onFullscreenChange);
+        this._nativeEventForwarder(new Event('created'));
     },
 
     onremove: function (/* vnode */) {
@@ -225,7 +230,7 @@ const ImageViewerComponent = {
 
         const position = this.position;
         const styles = {
-            'background-image': `url(${this.image.src})`
+            'background-image': `url("${this.image.src.replace(/(")/g, "\\$1")}")`
         };
 
         let positionX = 'center',
@@ -249,20 +254,24 @@ const ImageViewerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        const container = vnode.dom;
+        let fullscreenToggle = new Event('fullscreenToggle');
+        this._nativeEventForwarder(fullscreenToggle);
+        if (!fullscreenToggle.cancelBubble) {
+            const container = vnode.dom;
 
-        if (this.isFullscreen) {
-            const exitFullscreen = document.exitFullscreen ||
-                document.mozCancelFullScreen ||
-                document.webkitExitFullscreen;
+            if (this.isFullscreen) {
+                const exitFullscreen = document.exitFullscreen ||
+                    document.mozCancelFullScreen ||
+                    document.webkitExitFullscreen;
 
-            exitFullscreen.apply(document);
-        } else {
-            const requestFullscreen = container.requestFullScreen ||
-                container.webkitRequestFullScreen ||
-                container.mozRequestFullScreen;
+                exitFullscreen.apply(document);
+            } else {
+                const requestFullscreen = container.requestFullScreen ||
+                    container.webkitRequestFullScreen ||
+                    container.mozRequestFullScreen;
 
-            requestFullscreen.apply(container);
+                requestFullscreen.apply(container);
+            }
         }
     },
 
@@ -333,8 +342,8 @@ const ImageViewerComponent = {
                 }, [
                     m('i', {
                         class: classnames({
-                            'icon-expand-16': !this.isFullscreen,
-                            'icon-compress-16': this.isFullscreen
+                            'icon-expand-16': !this.isFullscreen || !this.isBodyFullscreen,
+                            'icon-compress-16': this.isFullscreen || this.isBodyFullscreen
                         })
                     })
                 ]) : ''

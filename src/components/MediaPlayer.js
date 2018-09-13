@@ -18,6 +18,7 @@ const MediaPlayerComponent = {
     needsUserTrigger: false,
 
     isFullscreen: false,
+    isBodyFullscreen: false,
     isMobile: IS_MOBILE,
 
     isLoading: false,
@@ -39,6 +40,7 @@ const MediaPlayerComponent = {
     showNotification: false, // TODO: move to independent viewers
     notificationType: null, // TODO: move witwh showNotification
     _resizeSensor: null, // TODO: move resizeSensor logic into class mixin
+    autoplayFailed: false, // Autoplay failed - show alert
 
     _attachResizeSensor() {
         if (!this._resizeSensor) {
@@ -60,6 +62,7 @@ const MediaPlayerComponent = {
         this._attachResizeSensor();
         document.addEventListener(FULLSCREEN_EVENT_NAME, this._fullscreenchange);
         this.resize();
+        this._nativeEventForwarder(new Event('created'));
     },
 
     onremove(/* vnode */) {
@@ -156,24 +159,33 @@ const MediaPlayerComponent = {
             document.msFullscreenElement;
 
         this.isFullscreen = (element && vnode.dom.contains(element)) || false;
+        this.isBodyFullscreen = element || false;
         this.redraw();
     },
 
-    play(notify) {
+    play(notify, isAutoplayTriggered) {
         this.needsUserTrigger = false;
         this.showPosterImage = false;
         const media = this.mediaElement;
-
         if (this.isError) {
             media.load();
         } else if (this.isEnded) {
             this.currentTime = 0;
             media.currentTime = 0;
             media.play();
-            notify && this.notify('play');
         } else if (this.isPaused) {
-            media.play();
-            notify && this.notify('play');
+            let playPromise = media.play();
+            if (playPromise !== undefined) {
+                playPromise.then(function() {
+                    notify && this.notify('play');
+                    this.autoplayFailed = false;
+                }.bind(this)).catch(function(error) {
+                    if (isAutoplayTriggered) {
+                        this.autoplayFailed = true;
+                        this.redraw();
+                    }
+                }.bind(this));
+            }
         } else {
             media.pause();
             notify && this.notify('pause');
@@ -208,7 +220,7 @@ const MediaPlayerComponent = {
 
         let maxWidth, maxHeight;
 
-        if (this.isFullscreen) {
+        if (this.isFullscreen || this.isBodyFullscreen) {
             maxWidth = window.innerWidth;
             maxHeight = window.innerHeight;
         } else {
@@ -224,8 +236,7 @@ const MediaPlayerComponent = {
 
             maxHeight = this._instance.containerHeight;
         }
-
-        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && this.isFullscreen);
+        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && (this.isFullscreen || this.isBodyFullscreen));
 
         let ratio = 0,
             widthModified = false,
@@ -281,19 +292,23 @@ const MediaPlayerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        const container = vnode.dom;
+        let fullscreenToggle = new Event('fullscreenToggle');
+        this._nativeEventForwarder(fullscreenToggle);
+        if (!fullscreenToggle.cancelBubble) {
+            const container = vnode.dom;
 
-        if (this.isFullscreen) {
-            const exitFullscreen = document.exitFullscreen
-                || document.mozCancelFullScreen
-                || document.webkitExitFullscreen;
+            if (this.isFullscreen) {
+                const exitFullscreen = document.exitFullscreen
+                    || document.mozCancelFullScreen
+                    || document.webkitExitFullscreen;
 
-            exitFullscreen.apply(document);
-        } else {
-            const requestFullscreen = container.requestFullScreen
-                || container.webkitRequestFullScreen
-                || container.mozRequestFullScreen;
-            requestFullscreen.apply(container);
+                exitFullscreen.apply(document);
+            } else {
+                const requestFullscreen = container.requestFullScreen
+                    || container.webkitRequestFullScreen
+                    || container.mozRequestFullScreen;
+                requestFullscreen.apply(container);
+            }
         }
     },
 
@@ -398,7 +413,7 @@ const MediaPlayerComponent = {
             this.isInitialLoad = false;
 
             if (this.autoplay) {
-                this.play();
+                this.play(false, true);
             }
         }
     },
@@ -618,7 +633,7 @@ const MediaPlayerComponent = {
         }
 
         // TODO: this if condition... jesus christ.
-        if (this.needsUserTrigger || (this.file.mimeType.split('/')[0] !== 'audio' && !this.autoplay && this.currentTime === 0 && !this.isLoading && !this.isPlaying && !this.isError && !this.isEnded)) {
+        if (this.autoplayFailed || this.needsUserTrigger || (this.file.mimeType.split('/')[0] !== 'audio' && !this.autoplay && this.currentTime === 0 && !this.isLoading && !this.isPlaying && !this.isError && !this.isEnded)) {
             Alert = m(PlayAlert, { onTogglePlay: () => { this.play(); } } );
         }
 
@@ -688,7 +703,7 @@ const MediaPlayerComponent = {
                 muted: this.isMuted,
                 speed: this.playbackSpeed,
                 type: vnode.attrs.type,
-                fullscreen: this.isFullscreen,
+                fullscreen: this.isFullscreen || this.isBodyFullscreen,
                 format: this.timeFormat,
                 playing: this.isPlaying,
                 loading: this.isLoading,
