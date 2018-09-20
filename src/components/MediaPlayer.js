@@ -40,6 +40,7 @@ const MediaPlayerComponent = {
     showNotification: false, // TODO: move to independent viewers
     notificationType: null, // TODO: move witwh showNotification
     _resizeSensor: null, // TODO: move resizeSensor logic into class mixin
+    autoplayFailed: false, // Autoplay failed - show alert
 
     _attachResizeSensor() {
         if (!this._resizeSensor) {
@@ -162,21 +163,29 @@ const MediaPlayerComponent = {
         this.redraw();
     },
 
-    play(notify) {
+    play(notify, isAutoplayTriggered) {
         this.needsUserTrigger = false;
         this.showPosterImage = false;
         const media = this.mediaElement;
-
         if (this.isError) {
             media.load();
         } else if (this.isEnded) {
             this.currentTime = 0;
             media.currentTime = 0;
             media.play();
-            notify && this.notify('play');
         } else if (this.isPaused) {
-            media.play();
-            notify && this.notify('play');
+            let playPromise = media.play();
+            if (playPromise !== undefined) {
+                playPromise.then(function() {
+                    notify && this.notify('play');
+                    this.autoplayFailed = false;
+                }.bind(this)).catch(function(error) {
+                    if (isAutoplayTriggered) {
+                        this.autoplayFailed = true;
+                        this.redraw();
+                    }
+                }.bind(this));
+            }
         } else {
             media.pause();
             notify && this.notify('pause');
@@ -404,7 +413,7 @@ const MediaPlayerComponent = {
             this.isInitialLoad = false;
 
             if (this.autoplay) {
-                this.play();
+                this.play(false, true);
             }
         }
     },
@@ -624,7 +633,7 @@ const MediaPlayerComponent = {
         }
 
         // TODO: this if condition... jesus christ.
-        if (this.needsUserTrigger || (this.file.mimeType.split('/')[0] !== 'audio' && !this.autoplay && this.currentTime === 0 && !this.isLoading && !this.isPlaying && !this.isError && !this.isEnded)) {
+        if (this.autoplayFailed || this.needsUserTrigger || (this.file.mimeType.split('/')[0] !== 'audio' && !this.autoplay && this.currentTime === 0 && !this.isLoading && !this.isPlaying && !this.isError && !this.isEnded)) {
             Alert = m(PlayAlert, { onTogglePlay: () => { this.play(); } } );
         }
 
