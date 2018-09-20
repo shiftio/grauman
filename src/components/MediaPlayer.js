@@ -159,7 +159,7 @@ const MediaPlayerComponent = {
             document.msFullscreenElement;
 
         this.isFullscreen = (element && vnode.dom.contains(element)) || false;
-        this.isBodyFullscreen = element || false;
+        this.isBodyFullscreen = Boolean(element);
         this.redraw();
     },
 
@@ -174,17 +174,17 @@ const MediaPlayerComponent = {
             media.currentTime = 0;
             media.play();
         } else if (this.isPaused) {
-            let playPromise = media.play();
+            const playPromise = media.play();
             if (playPromise !== undefined) {
-                playPromise.then(function() {
+                playPromise.then(() => {
                     notify && this.notify('play');
                     this.autoplayFailed = false;
-                }.bind(this)).catch(function(error) {
+                }).catch((/* error */) => {
                     if (isAutoplayTriggered) {
                         this.autoplayFailed = true;
                         this.redraw();
                     }
-                }.bind(this));
+                });
             }
         } else {
             media.pause();
@@ -292,7 +292,7 @@ const MediaPlayerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        let fullscreenToggle = new Event('fullscreenToggle');
+        const fullscreenToggle = new Event('fullscreenToggle');
         this._nativeEventForwarder(fullscreenToggle);
         if (!fullscreenToggle.cancelBubble) {
             const container = vnode.dom;

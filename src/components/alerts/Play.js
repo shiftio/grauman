@@ -5,7 +5,7 @@ const PlayAlert = {
         return m('div', {
             onclick: vnode.attrs.onTogglePlay,
             class: 'icon-container-wrapper'
-        }, m('div.icon-container',{} , m('i.icon-play')));
+        }, m('div.icon-container', {}, m('i.icon-play')));
     }
 };
 

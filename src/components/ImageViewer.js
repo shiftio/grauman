@@ -49,7 +49,7 @@ const ImageViewerComponent = {
             document.msFullscreenElement;
 
         this.isFullscreen = (element && vnode.dom.contains(element)) || false;
-        this.isBodyFullscreen = element || false;
+        this.isBodyFullscreen = Boolean(element);
         this.redraw();
     },
 
@@ -154,7 +154,7 @@ const ImageViewerComponent = {
 
     oninit: function (vnode) {
         this._nativeEventForwarder = typeof vnode.attrs._nativeEventForwarder === 'function' ?
-            vnode.attrs._nativeEventForwarder : false;
+            vnode.attrs._nativeEventForwarder : function () {};
         this.onDocumentMouseMove = this.onDocumentMouseMove.bind(this, vnode);
         this.onDocumentMouseUp = this.onDocumentMouseUp.bind(this, vnode);
         this.onElementResize = this.onElementResize.bind(this, vnode);
@@ -230,7 +230,7 @@ const ImageViewerComponent = {
 
         const position = this.position;
         const styles = {
-            'background-image': `url("${this.image.src.replace(/(")/g, "\\$1")}")`
+            'background-image': `url("${this.image.src.replace(/(")/g, '\\$1')}")`
         };
 
         let positionX = 'center',
@@ -254,7 +254,7 @@ const ImageViewerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        let fullscreenToggle = new Event('fullscreenToggle');
+        const fullscreenToggle = new Event('fullscreenToggle');
         this._nativeEventForwarder(fullscreenToggle);
         if (!fullscreenToggle.cancelBubble) {
             const container = vnode.dom;

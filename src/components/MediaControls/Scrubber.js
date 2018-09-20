@@ -4,7 +4,6 @@ import throttle from 'lodash.throttle';
 import Polyfills from 'Polyfills';
 import TimeFormatter from 'TimeFormatter';
 import './Scrubber.scss';
-import { IS_MOBILE } from 'consts';
 
 function _matches(el, selector) {
     return (
