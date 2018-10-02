@@ -6,6 +6,29 @@ import { IMAGEVIEWER_MODES, DEFAULT_LOCALSTORAGE_BASE_KEY } from 'consts';
 import makeObservable from 'makeObservable';
 
 export default class ImageViewer {
+    /**
+     * `grauman.component.created` event. Fired in oncreate function inside Grauman.
+     *
+     * When using for ImageViewer you need know that this event can be dispatched before you will attach callback to it
+     * due to fast image loading.
+     *
+     * @event grauman.component.created
+     * @type {Event}
+     */
+    /**
+     * `grauman.component.fullscreenToggle` event. Fired when fullscreen toggle button is clicked.
+     *
+     * This event gives possibility to control fullscreen toggling and state from outside of Grauman at all: toggling -
+     * fullscreenToggle.cancelBubble property (if event.cancelBubble = true will skip any inner manipulations with html
+     * fullscreen state on fullscreen toggle event) and state - fullscreenToggle.getFullscreenStateHandler
+     * and fullscreenChangeEvent.getFullscreenStateHandler (fullscreenChangeEvent need to have getFullscreenStateHandler
+     * callback because when in fullscreen state you change media - it need to force state change by dispatching
+     * fullscreenChangeEvent) callback that returns fullscreen state.
+     *
+     * @event grauman.component.fullscreenToggle
+     * @type {Event}
+     */
+
     constructor(container, settings = {}) {
         this.localStorageEnabled = typeof settings.localStorageEnabled === 'boolean' ?
             settings.localStorageEnabled : true;
@@ -134,7 +157,7 @@ export default class ImageViewer {
                     isFullscreenEnabled: instance.isFullscreenEnabled,
                     viewMode: instance.viewMode,
                     onViewModeChange: instance._onViewModeChange,
-                    _nativeEventForwarder: function _eventForwarder(e) { instance._notify(e.type, e); }.bind(instance)
+                    _nativeEventForwarder: function _eventForwarder(e) { this._notify(e.type, e); }.bind(instance)
                 }));
             }
         });

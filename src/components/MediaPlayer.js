@@ -18,7 +18,7 @@ const MediaPlayerComponent = {
     needsUserTrigger: false,
 
     isFullscreen: false,
-    isBodyFullscreen: false,
+    getFullscreenStateHandler: false,
     isMobile: IS_MOBILE,
 
     isLoading: false,
@@ -60,9 +60,10 @@ const MediaPlayerComponent = {
 
     oncreate(/* vnode */) {
         this._attachResizeSensor();
-        document.addEventListener(FULLSCREEN_EVENT_NAME, this._fullscreenchange);
         this.resize();
-        this._nativeEventForwarder(new Event('created'));
+
+        document.addEventListener(FULLSCREEN_EVENT_NAME, this._fullscreenchange);
+        this._nativeEventForwarder(new Event('grauman.component.created'));
     },
 
     onremove(/* vnode */) {
@@ -152,14 +153,21 @@ const MediaPlayerComponent = {
         this.resize();
     },
 
-    _fullscreenchange(vnode) {
-        const element = document.fullscreenElement ||
-            document.webkitCurrentFullScreenElement ||
-            document.mozFullScreenElement ||
-            document.msFullscreenElement;
+    _fullscreenchange(vnode, event) {
+        const getFullscreenStateHandler = event.getFullscreenStateHandler || this.getFullscreenStateHandler;
 
-        this.isFullscreen = (element && vnode.dom.contains(element)) || false;
-        this.isBodyFullscreen = Boolean(element);
+        if (typeof getFullscreenStateHandler === 'function') {
+            this.isFullscreen = getFullscreenStateHandler();
+
+        } else {
+            const element = document.fullscreenElement ||
+                document.webkitCurrentFullScreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement;
+
+            this.isFullscreen = (element && vnode.dom.contains(element)) || false;
+        }
+
         this.redraw();
     },
 
@@ -220,7 +228,7 @@ const MediaPlayerComponent = {
 
         let maxWidth, maxHeight;
 
-        if (this.isFullscreen || this.isBodyFullscreen) {
+        if (this.isFullscreen) {
             maxWidth = window.innerWidth;
             maxHeight = window.innerHeight;
         } else {
@@ -236,7 +244,7 @@ const MediaPlayerComponent = {
 
             maxHeight = this._instance.containerHeight;
         }
-        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && (this.isFullscreen || this.isBodyFullscreen));
+        const upscale = this.upscale === UPSCALE_MODES.ALWAYS || (this.upscale === UPSCALE_MODES.FULLSCREEN_ONLY && this.isFullscreen);
 
         let ratio = 0,
             widthModified = false,
@@ -292,8 +300,10 @@ const MediaPlayerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        const fullscreenToggle = new Event('fullscreenToggle');
+        let fullscreenToggle = new Event('grauman.component.fullscreenToggle');
         this._nativeEventForwarder(fullscreenToggle);
+        this.getFullscreenStateHandler = fullscreenToggle.getFullscreenStateHandler || false;
+
         if (!fullscreenToggle.cancelBubble) {
             const container = vnode.dom;
 
@@ -303,6 +313,7 @@ const MediaPlayerComponent = {
                     || document.webkitExitFullscreen;
 
                 exitFullscreen.apply(document);
+
             } else {
                 const requestFullscreen = container.requestFullScreen
                     || container.webkitRequestFullScreen
@@ -703,7 +714,7 @@ const MediaPlayerComponent = {
                 muted: this.isMuted,
                 speed: this.playbackSpeed,
                 type: vnode.attrs.type,
-                fullscreen: this.isFullscreen || this.isBodyFullscreen,
+                fullscreen: this.isFullscreen,
                 format: this.timeFormat,
                 playing: this.isPlaying,
                 loading: this.isLoading,
