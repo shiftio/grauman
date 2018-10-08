@@ -262,7 +262,7 @@ const ImageViewerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        let fullscreenToggle = new Event('grauman.component.fullscreenToggle');
+        const fullscreenToggle = new Event('grauman.component.fullscreenToggle');
         this._nativeEventForwarder(fullscreenToggle);
         this.getFullscreenStateHandler = fullscreenToggle.getFullscreenStateHandler || false;
 
