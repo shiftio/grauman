@@ -227,6 +227,27 @@ class MediaPlayer {
      * @event waiting
      * @type {Event}
      */
+    /**
+     * `grauman.component.created` event. Fired in oncreate function inside Grauman.
+     *
+     * None.
+     *
+     * @event grauman.component.created
+     * @type {Event}
+     */
+    /**
+     * `grauman.component.fullscreenToggle` event. Fired when fullscreen toggle button is clicked.
+     *
+     * This event gives possibility to control fullscreen toggling and state from outside of Grauman at all: toggling -
+     * fullscreenToggle.cancelBubble property (if event.cancelBubble = true will skip any inner manipulations with html
+     * fullscreen state on fullscreen toggle event) and state - fullscreenToggle.getFullscreenStateHandler
+     * and fullscreenChangeEvent.getFullscreenStateHandler (fullscreenChangeEvent need to have getFullscreenStateHandler
+     * callback because when in fullscreen state you change media - it need to force state change by dispatching
+     * fullscreenChangeEvent) callback that returns fullscreen state.
+     *
+     * @event grauman.component.fullscreenToggle
+     * @type {Event}
+     */
 
     /**
         Constructs a new MediaPlayer, which is a web component for viewing media assets

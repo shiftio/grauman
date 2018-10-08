@@ -20,7 +20,7 @@ const ImageViewerComponent = {
     isHidingControls: false,
     isLockingControls: false,
     isFullscreen: false,
-    isBodyFullscreen: false,
+    getFullscreenStateHandler: false,
 
     position: [0, 0],
     lastMousePosition: [0, 0],
@@ -42,14 +42,21 @@ const ImageViewerComponent = {
         this.attachDragListeners();
     },
 
-    onFullscreenChange(vnode) {
-        const element = document.fullscreenElement ||
-            document.webkitCurrentFullScreenElement ||
-            document.mozFullScreenElement ||
-            document.msFullscreenElement;
+    onFullscreenChange(vnode, event) {
+        const getFullscreenStateHandler = event.getFullscreenStateHandler || this.getFullscreenStateHandler;
 
-        this.isFullscreen = (element && vnode.dom.contains(element)) || false;
-        this.isBodyFullscreen = Boolean(element);
+        if (typeof getFullscreenStateHandler === 'function') {
+            this.isFullscreen = getFullscreenStateHandler();
+
+        } else {
+            const element = document.fullscreenElement ||
+                document.webkitCurrentFullScreenElement ||
+                document.mozFullScreenElement ||
+                document.msFullscreenElement;
+
+            this.isFullscreen = (element && vnode.dom.contains(element)) || false;
+        }
+
         this.redraw();
     },
 
@@ -202,8 +209,9 @@ const ImageViewerComponent = {
         this.resizeSensor = new ResizeSensor(vnode.dom, this.onElementResize);
 
         this.loadImage(vnode.attrs.file);
+
         document.addEventListener(FULLSCREEN_EVENT_NAME, this.onFullscreenChange);
-        this._nativeEventForwarder(new Event('created'));
+        this._nativeEventForwarder(new Event('grauman.component.created'));
     },
 
     onremove: function (/* vnode */) {
@@ -254,21 +262,23 @@ const ImageViewerComponent = {
     },
 
     toggleFullscreen(vnode) {
-        const fullscreenToggle = new Event('fullscreenToggle');
+        let fullscreenToggle = new Event('grauman.component.fullscreenToggle');
         this._nativeEventForwarder(fullscreenToggle);
+        this.getFullscreenStateHandler = fullscreenToggle.getFullscreenStateHandler || false;
+
         if (!fullscreenToggle.cancelBubble) {
             const container = vnode.dom;
 
             if (this.isFullscreen) {
-                const exitFullscreen = document.exitFullscreen ||
-                    document.mozCancelFullScreen ||
-                    document.webkitExitFullscreen;
+                const exitFullscreen = document.exitFullscreen
+                    || document.mozCancelFullScreen
+                    || document.webkitExitFullscreen;
 
                 exitFullscreen.apply(document);
             } else {
-                const requestFullscreen = container.requestFullScreen ||
-                    container.webkitRequestFullScreen ||
-                    container.mozRequestFullScreen;
+                const requestFullscreen = container.requestFullScreen
+                    || container.webkitRequestFullScreen
+                    || container.mozRequestFullScreen;
 
                 requestFullscreen.apply(container);
             }
@@ -342,8 +352,8 @@ const ImageViewerComponent = {
                 }, [
                     m('i', {
                         class: classnames({
-                            'icon-expand-16': !this.isFullscreen || !this.isBodyFullscreen,
-                            'icon-compress-16': this.isFullscreen || this.isBodyFullscreen
+                            'icon-expand-16': !this.isFullscreen,
+                            'icon-compress-16': this.isFullscreen
                         })
                     })
                 ]) : ''
