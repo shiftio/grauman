@@ -1,6 +1,6 @@
 {
   "name": "grauman",
-  "version": "0.2.7-alpha.1",
+  "version": "0.2.7-alpha.2",
   "description": "Framework-agnostic Web Media Player that supports M4A, MP4, and Encrypted M3U8 playback.",
   "main": "dist/grauman.js",
   "module": "src/Grauman.js",
@@ -42,7 +42,7 @@
     "lodash.throttle": "4.1.1",
     "merge": "^1.2.0",
     "mithril": "1.1.1",
-    "node-sass": "4.3.0",
+    "node-sass": "^4.3.0",
     "pdf.js": "git+https://github.com/shiftio/pdfjs-dist#188e4c3",
     "postcss-loader": "2.0.5",
     "rimraf": "^2.6.1",
