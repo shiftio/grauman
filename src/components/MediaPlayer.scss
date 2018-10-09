@@ -63,3 +63,11 @@
         }
     }
 }
+
+.is-fullscreen .media-container .viewer>canvas,
+.is-fullscreen .media-container .viewer>video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+}
