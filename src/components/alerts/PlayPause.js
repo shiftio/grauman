@@ -25,7 +25,7 @@ const PlayPauseAlert = {
             animate: showAnimation
         });
 
-        return m('div', { class: className }, [
+        return m('div.play-pause-alert', { class: className }, [
             m('i', { class: `icon-${type}` })
         ]);
     }

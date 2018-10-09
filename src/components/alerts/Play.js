@@ -2,10 +2,10 @@ import m from 'mithril';
 
 const PlayAlert = {
     view(vnode) {
-        return m('div', {
+        return m('div.play-alert', {
             onclick: vnode.attrs.onTogglePlay,
-            class: 'icon-container-wrapper'
-        }, m('div.icon-container', {}, m('i.icon-play')));
+            class: 'icon-container'
+        }, m('i.icon-play'));
     }
 };
 

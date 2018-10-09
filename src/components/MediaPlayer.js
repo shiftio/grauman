@@ -27,6 +27,7 @@ const MediaPlayerComponent = {
     isPaused: false,
     isEnded: false,
     isDestroyed: false,
+    isFirstPlay: true,
 
     showPosterImage: false, // TODO: move to independent viewers
     isHidingControls: false,
@@ -185,8 +186,9 @@ const MediaPlayerComponent = {
             const playPromise = media.play();
             if (playPromise !== undefined) {
                 playPromise.then(() => {
-                    notify && this.notify('play');
+                    !this.isFirstPlay && notify && this.notify('play');
                     this.autoplayFailed = false;
+                    this.isFirstPlay = false;
                 }).catch((/* error */) => {
                     if (isAutoplayTriggered) {
                         this.autoplayFailed = true;
@@ -338,6 +340,7 @@ const MediaPlayerComponent = {
     notify(type) {
         this.notificationType = type;
         this.showNotification = true;
+        this.redraw();
         setTimeout(() => {
             this.notificationType = null;
             this.showNotification = false;
@@ -446,6 +449,7 @@ const MediaPlayerComponent = {
     _onMediaLoadStart(/* attrs, e */) {
         this.currentTime = 0;
         this.isInitialLoad = true;
+        this.isFirstPlay = true;
         this.isLoading = true;
         this.isEnded = false;
         this.isError = false;
