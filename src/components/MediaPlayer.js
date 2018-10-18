@@ -129,7 +129,10 @@ const MediaPlayerComponent = {
             onloadedmetadata: this._onMediaLoadedMetadata.bind(this, vnode.attrs),
             onloadstart: this._onMediaLoadStart.bind(this, vnode.attrs),
             onpause: this._onMediaPause.bind(this, vnode.attrs),
+
+            oncanplay: this._onCanPlayThrough.bind(this, vnode.attrs),
             oncanplaythrough: this._onCanPlayThrough.bind(this, vnode.attrs),
+
             onplaying: this._onMediaPlaying.bind(this, vnode.attrs),
             onprogress: this._onMediaProgress.bind(this, vnode.attrs),
             onseeked: this._onMediaSeeked.bind(this, vnode.attrs),
