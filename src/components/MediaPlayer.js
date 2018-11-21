@@ -641,7 +641,7 @@ const MediaPlayerComponent = {
 
         if (this.showPosterImage) {
             PosterImage = m('div.poster-image', {
-                style: { 'background-image': `url(${this.file.poster})` },
+                style: { 'background-image': `url("${this.file.poster.replace(/(")/g, "\\$1")}")` },
                 onmousedown: (e) => {
                     this.play(true);
                     Polyfills.closest(vnode.dom, '.media-container').focus();

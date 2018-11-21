@@ -96,7 +96,7 @@ const AudioViewer = {
             m('audio', vnode.attrs.mediaAttrs),
             vnode.attrs.file.waveform ? [
                 m('.audio-image', {
-                    style: { 'background-image': `url("${vnode.attrs.file.waveform}")` }
+                    style: { 'background-image': `url("${vnode.attrs.file.waveform.replace(/(")/g, "\\$1")}")` }
                 }, [
                     m('.audio-playhead', { style: { width: `${this.percentPlayed}%` } }),
                     this.isHovering ? m('.audio-scrubber', { style: { width: `${percentHover}%` } }, [
