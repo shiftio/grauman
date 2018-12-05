@@ -129,7 +129,10 @@ const MediaPlayerComponent = {
             onloadedmetadata: this._onMediaLoadedMetadata.bind(this, vnode.attrs),
             onloadstart: this._onMediaLoadStart.bind(this, vnode.attrs),
             onpause: this._onMediaPause.bind(this, vnode.attrs),
+
+            oncanplay: this._onCanPlayThrough.bind(this, vnode.attrs),
             oncanplaythrough: this._onCanPlayThrough.bind(this, vnode.attrs),
+
             onplaying: this._onMediaPlaying.bind(this, vnode.attrs),
             onprogress: this._onMediaProgress.bind(this, vnode.attrs),
             onseeked: this._onMediaSeeked.bind(this, vnode.attrs),
@@ -638,7 +641,7 @@ const MediaPlayerComponent = {
 
         if (this.showPosterImage) {
             PosterImage = m('div.poster-image', {
-                style: { 'background-image': `url(${this.file.poster})` },
+                style: { 'background-image': `url("${this.file.poster.replace(/(")/g, "\\$1")}")` },
                 onmousedown: (e) => {
                     this.play(true);
                     Polyfills.closest(vnode.dom, '.media-container').focus();
