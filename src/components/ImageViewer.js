@@ -272,13 +272,15 @@ const ImageViewerComponent = {
             if (this.isFullscreen) {
                 const exitFullscreen = document.exitFullscreen
                     || document.mozCancelFullScreen
-                    || document.webkitExitFullscreen;
+                    || document.webkitExitFullscreen
+                    || document.msExitFullscreen;
 
                 exitFullscreen.apply(document);
             } else {
-                const requestFullscreen = container.requestFullScreen
-                    || container.webkitRequestFullScreen
-                    || container.mozRequestFullScreen;
+                const requestFullscreen = container.requestFullscreen
+                    || container.webkitRequestFullscreen
+                    || container.mozRequestFullScreen
+                    || container.msRequestFullscreen;
 
                 requestFullscreen.apply(container);
             }
