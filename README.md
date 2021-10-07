@@ -21,6 +21,13 @@ Requires npm 3 to install and build.
 
 The build artifact is located in the dist/ directory. By default, `npm run build` emits a production artifact. To emit a dev artifact that is not minified and does not go through a linting pass, use `npm run build-dev`.
 
+# Releasing new version
+
+- `npm run build`
+- `npm pack`
+- Create new tag
+- Create new github release for this tag
+
 # Test Pages
 
 For local development
