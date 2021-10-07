@@ -1,6 +1,6 @@
 {
   "name": "grauman",
-  "version": "0.2.7",
+  "version": "0.2.8",
   "description": "Framework-agnostic Web Media Player that supports M4A, MP4, and Encrypted M3U8 playback.",
   "main": "dist/grauman.js",
   "module": "src/Grauman.js",
